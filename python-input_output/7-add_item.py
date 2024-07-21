@@ -1,31 +1,28 @@
 #!/usr/bin/python3
 """
-This module adds all arguments to a Python list and saves them to a file.
-
-The list is saved as a JSON representation in a file named add_item.json.
+This program take the file add_item.json, and add the
+parameters to the list inside this file.
+- If the file doesn't exist create it.
+- If no exist parameters do nothing or create the list if the file is empty.
 """
 
-import sys
-from save_to_json_file import save_to_json_file
-from load_from_json_file import load_from_json_file
+from sys import argv
+from os.path import exists
 
-def main():
-    """
-    Main function to add all command line arguments to a list and save to a file.
-    """
-    filename = 'add_item.json'
+save_to_json_file = __import__("5-save_to_json_file").save_to_json_file
+load_from_json_file = __import__("6-load_from_json_file").load_from_json_file
 
-    # Load existing data from the file, if it exists
-    try:
-        items = load_from_json_file(filename)
-    except FileNotFoundError:
-        items = []
+namefile = "add_item.json"
+argc = len(argv)
 
-    # Add new items from command line arguments
-    items.extend(sys.argv[1:])
+file_list = []
 
-    # Save the updated list back to the file
-    save_to_json_file(items, filename)
+if exists(namefile):
+    file_list = load_from_json_file(namefile)
 
-if __name__ == '__main__':
-    main()
+if (argc == 1):
+    save_to_json_file(file_list, namefile)
+else:
+    for index in range(1, argc):
+        file_list.append(argv[index])
+    save_to_json_file(file_list, namefile)
